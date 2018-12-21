@@ -29,11 +29,11 @@
         android:text="DATE"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        app:fontFamily="Times New Roman"/>
+        app:fontFamily="Times New Roman" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="338dp"
+        android:layout_width="match_parent"
         android:layout_height="79dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -44,7 +44,8 @@
         android:id="@+id/textView3"
         android:layout_width="142dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView1"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_alignLeft="@+id/textView2"
         android:layout_below="@+id/textView2"
         android:text="End Time"
         android:textColor="@android:color/black"
@@ -56,6 +57,7 @@
         android:layout_width="142dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView1"
+        android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
         android:text="Start Time"
         android:textColor="@android:color/black"
@@ -66,9 +68,9 @@
         android:id="@+id/textView1"
         android:layout_width="142dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="71dp"
+        android:layout_marginLeft="71dp"
         android:layout_marginTop="93dp"
         android:text="Organizer"
         android:textColor="@android:color/black"
@@ -80,9 +82,7 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="61dp"
         android:layout_marginTop="103dp"
         android:visibility="visible"
         app:srcCompat="@android:color/transparent" />
@@ -92,7 +92,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/imageView1"
         android:layout_marginTop="121dp"
         android:visibility="visible"
         app:srcCompat="@android:color/transparent" />
@@ -102,17 +101,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/imageView1"
         android:layout_marginTop="139dp"
+        android:ayout_alignStart="@+id/imageView1"
         android:visibility="visible"
         app:srcCompat="@android:color/transparent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="391dp"
+    <ListView
+        android:id="@+id/View1"
+        android:layout_width="wrap_content"
+        android:layout_height="373dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:orientation="vertical"
-        android:visibility="visible"></LinearLayout>
+        android:divider="@android:color/black"
+        android:dividerHeight="1dp"
+        android:fastScrollEnabled="true"
+        android:scrollbars="horizontal"
+        android:visibility="visible"></ListView>
 
 </RelativeLayout>
