@@ -51,6 +51,12 @@ private String organizer, sDate, sTime, eTime, subject;
         this.subject = subject;
     }
 
+    public String toString(){
+     return sTime +"   " + organizer + "   "+ subject;
+
+    }
+
+
     public String toJsonString(){
      return "";
     }
