@@ -2,6 +2,14 @@ package com.example.tana5915.drsroommonitor;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import android.view.Gravity;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -19,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Calendar calendar = Calendar.getInstance();
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+
+        TextView textViewDate = findViewById(R.id.text_view_date);
+        textViewDate.setText(currentDate);
 
         listView = (ListView) findViewById(R.id.list_view);
         Meeting m1 = new Meeting("Aidan", "1/7","8:00 am", "9:00 am", "top security");
@@ -62,5 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
         listView.setAdapter(adapter);
+
     }
 }
