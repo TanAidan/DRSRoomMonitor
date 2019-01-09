@@ -41,9 +41,17 @@ public class Document {
         String subject = "DRS";
 
         for (Day d: dayList) {
-        for (int i =0; i<8;i++)
+            if(dayList.indexOf(d)==3||dayList.indexOf(d)==5){
+                for (int j =0; j<24;j++) {
+                    d.addMeeting(createMeeting(organizer+" j", sDate+"j", sTime+"j", eTime+"j", subject+"j"));
+                }
+            }
+        for (int i =0; i<24;i++)
         {
-          d.addMeeting(createMeeting(organizer, sDate, sTime, eTime, subject));
+
+                d.addMeeting(createMeeting(organizer, sDate, sTime, eTime, subject));
+
+
         }
 
         }
