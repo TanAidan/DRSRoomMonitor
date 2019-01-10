@@ -3,6 +3,7 @@ package com.example.tana5915.drsroommonitor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter adapter;
     Document d;
     Calendar calendar;
-    TextView textViewDate;
+    TextView textViewDate, subject, startTime, endTime, organizer;
+
     int dayIndex=4;  //set to 4, 4 is the index of the 0th day
 
 
@@ -35,13 +37,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        subject = findViewById(R.id.subject);
+        organizer = findViewById(R.id.organizer);
+        startTime = findViewById(R.id.startTime);
+        endTime = findViewById(R.id.eTime);
         calendar = Calendar.getInstance();
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         textViewDate = findViewById(R.id.text_view_date);
         textViewDate.setText(currentDate);
-
-
         listView = (ListView) findViewById(R.id.list_view);
 
         d = new Document();
@@ -52,6 +55,26 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
         listView.setAdapter(adapter);
+        Log.d("DRSMainActivity","onCreate");
+
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
+                String subj = "Subject: "+m.getSubject();
+                String organ = "organizer: "+m.getOrganizer();
+                String eTime = "EndTime: "+ m.geteTime();
+                String sTime = "StartTime: " +m.getsTime();
+                subject.setText(subj);
+                organizer.setText(organ);
+                endTime.setText(eTime);
+                startTime.setText(sTime);
+
+            }
+
+        });
 
     }
 
@@ -104,9 +127,7 @@ public class MainActivity extends AppCompatActivity {
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         textViewDate.setText(currentDate);
     }
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.
-    }
+
 
 
 

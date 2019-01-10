@@ -34,13 +34,13 @@ public class Document {
     }
 
     public void tempFill(){
-        String organizer = "Aidan";
+       /* String organizer = "Aidan";
         String sDate = "11/18/2000";
-        String sTime = "12:30:00 PM";
-        String eTime = "1:00:00 PM";
+        String sTime = "12:30 PM";
+        String eTime = "1:00 PM";
         String subject = "DRS";
-
-        for (Day d: dayList) {
+*/
+        /*for (Day d: dayList) {
             if(dayList.indexOf(d)==3||dayList.indexOf(d)==5){
                 for (int j =0; j<24;j++) {
                     d.addMeeting(createMeeting(organizer+" j", sDate+"j", sTime+"j", eTime+"j", subject+"j"));
@@ -54,7 +54,22 @@ public class Document {
 
         }
 
-        }
+
+
+*/
+        dayList.get(5).addMeeting(createMeeting("Todd","1/11/19","8:00 AM","9:00 AM", "RedShift Software"));
+        dayList.get(5).addMeeting(createMeeting("Rebekah","1/11/19","9:00 AM","10:00 AM", "Apple Meeting"));
+        dayList.get(5).addMeeting(createMeeting("Josh","1/11/19","10:00 AM","11:00 AM", "DRS Meeting"));
+        dayList.get(5).addMeeting(createMeeting("Peter","1/11/19","11:00 AM","12:00 PM", "Canyon Crest Academy Meeting"));
+        dayList.get(5).addMeeting(createMeeting("Aidan","1/11/19","12:00 PM","1:00 PM", "Samsung Software"));
+        dayList.get(5).addMeeting(createMeeting("Paymon","1/11/19","1:00 PM","2:00 PM", "Microsoft Meeting"));
+        dayList.get(5).addMeeting(createMeeting("Alexa","1/11/19","2:00 PM","3:00 PM", "Dell Meeting"));
+        dayList.get(5).addMeeting(createMeeting("Emily","1/11/19","3:00 PM","4:00 PM", "Sony Meeting"));
+        dayList.get(5).addMeeting(createMeeting("John","1/11/19","4:00 PM","5:00 PM", ""));
+        dayList.get(5).addMeeting(createMeeting("Daniel","1/11/19","5:00 PM","6:00 PM", "RedShift Software"));
+        dayList.get(5).addMeeting(createMeeting("Jack","1/11/19","6:00 PM","7:00 PM", "RedShift Software"));
+        dayList.get(5).addMeeting(createMeeting("Tom","1/11/19","7:00 PM","8:00 PM", "RedShift Software"));
+
 
 
     }
