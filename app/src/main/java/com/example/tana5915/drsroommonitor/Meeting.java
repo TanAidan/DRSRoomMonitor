@@ -52,7 +52,9 @@ private String organizer, sDate, sTime, eTime, subject;
     }
 
     public String toString(){
-     return sTime +"   " + organizer + "   "+ subject;
+     String s = sTime +"        " + organizer + "       "+ subject;
+
+     return s;
 
     }
 
