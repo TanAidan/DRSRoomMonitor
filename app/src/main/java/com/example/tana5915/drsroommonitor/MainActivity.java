@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
                 String subj = "Subject: "+m.getSubject();
-                String organ = "organizer: "+m.getOrganizer();
+                String organ = "Organizer: "+m.getOrganizer();
                 String eTime = "EndTime: "+ m.geteTime();
                 String sTime = "StartTime: " +m.getsTime();
                 subject.setText(subj);
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         list.clear();
         for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
+
         }
         adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
         listView.setAdapter(adapter);
