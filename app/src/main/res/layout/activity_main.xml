@@ -19,6 +19,35 @@
         android:visibility="visible"
         tools:visibility="visible" />
 
+   /* bar = (ProgressBar) findViewById(R.id.progressBar);
+    bar.setProgress(total);
+    int twoMin = 2 * 60 * 1000;
+
+    cdt = mew CountDownTimer(twoMin, 1000) {
+        public void onTick(long millisUntilFinished) {
+
+        total = (int) ((dTotal / 120) * 100);
+        bar.setProgress(total);
+
+        }
+
+    public void onFinish() {
+    //DO something when 2 min is up
+        }
+    }.start();
+
+*/
+    new CountDownTimer(30000, 1000) {
+
+    public void onTick(long millisUntilFinished) {
+    mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+    }
+
+    public void onFinish() {
+    mTextField.setText("done!");
+    }
+    }.start();
+
     <TextView
         android:id="@+id/main_meeting"
         android:layout_width="wrap_content"
