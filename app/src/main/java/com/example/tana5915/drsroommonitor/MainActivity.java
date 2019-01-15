@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView) findViewById(R.id.text_view_date);
