@@ -12,41 +12,41 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="557dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="52dp"
+        android:layout_marginEnd="274dp"
+        android:layout_marginRight="274dp"
+         android:layout_alignParentRight="true"
+        android:layout_marginTop="56dp"
         android:max="100"
+        android:progress="0"
         android:visibility="visible"
-        tools:visibility="visible" />
+        tools:visibility="visible"
 
-   /* bar = (ProgressBar) findViewById(R.id.progressBar);
-    bar.setProgress(total);
-    int twoMin = 2 * 60 * 1000;
+        ProgressBar mProgressBar;
+    CountDownTimer mCountDownTimer;
+    int i=0;
 
-    cdt = mew CountDownTimer(twoMin, 1000) {
-        public void onTick(long millisUntilFinished) {
+    mProgressBar=(ProgressBar)findViewById(R.id.progressbar);
+    mProgressBar.setProgress(i);
+    mCountDownTimer=new CountDownTimer(5000,1000) {
 
-        total = (int) ((dTotal / 120) * 100);
-        bar.setProgress(total);
-
-        }
-
-    public void onFinish() {
-    //DO something when 2 min is up
-        }
-    }.start();
-
-*/
-    new CountDownTimer(30000, 1000) {
-
+    @Override
     public void onTick(long millisUntilFinished) {
-    mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+    Log.v("Log_tag", "Tick of Progress"+ i+ millisUntilFinished);
+    i++;
+    mProgressBar.setProgress((int)i*100/(5000/1000));
+
     }
 
+    @Override
     public void onFinish() {
-    mTextField.setText("done!");
+    //Do what you want
+    i++;
+    mProgressBar.setProgress(100);
     }
-    }.start();
+    };
+    mCountDownTimer.start();
 
     <TextView
         android:id="@+id/main_meeting"
