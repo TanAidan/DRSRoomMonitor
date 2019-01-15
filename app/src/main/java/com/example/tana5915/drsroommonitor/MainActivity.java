@@ -1,5 +1,6 @@
 package com.example.tana5915.drsroommonitor;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -7,6 +8,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Calendar calendar;
     TextView textViewDate, subject, startTime, endTime, organizer;
 
-    int dayIndex=4;  //set to 4, 4 is the index of the 0th day
+    int dayIndex = 4;  //set to 4, 4 is the index of the 0th day
 
 
     @Override
@@ -49,24 +53,23 @@ public class MainActivity extends AppCompatActivity {
 
         d = new Document();
         d.tempFill();
-        for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
+        for (int i = 0; i < d.getDayList().get(dayIndex).getMeetingList().size(); i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
         }
 
-        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
+        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
-        Log.d("DRSMainActivity","onCreate");
-
+        Log.d("DRSMainActivity", "onCreate");
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
-                String subj = "Subject: "+m.getSubject();
-                String organ = "Organizer: "+m.getOrganizer();
-                String eTime = "EndTime: "+ m.geteTime();
-                String sTime = "StartTime: " +m.getsTime();
+                Meeting m = d.getDayList().get(dayIndex).getMeetingList().get(position);
+                String subj = "Subject: " + m.getSubject();
+                String organ = "Organizer: " + m.getOrganizer();
+                String eTime = "EndTime: " + m.geteTime();
+                String sTime = "StartTime: " + m.getsTime();
                 subject.setText(subj);
                 organizer.setText(organ);
                 endTime.setText(eTime);
@@ -76,98 +79,82 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        textView = (TextView) findViewById(R.id.text_view_date);
+        // Start long running operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    progressStatus += 1;
+                    // Update the progress bar and display the
+                    //current value in the text view
+                    handler.post(new Runnable() {
+                        public void run() {
+                            progressBar.setProgress(progressStatus);
+                            textView.setText(progressStatus+"/"+progressBar.getMax());
+                        }
+                    });
+                    try {
+                        // Sleep for 200 milliseconds.
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
-    public void nextDay(View view)
-    {
+    public void nextDay(View view) {
 
 
-        if(dayIndex<14) {
+        if (dayIndex < 14) {
             changeDate(true);
             dayIndex++;
-        }
-        else{
+        } else {
             //too many days
         }
         updateList();
     }
-    public void backDay(View view)
-    {
 
-        if(dayIndex>0) {
+    public void backDay(View view) {
+
+        if (dayIndex > 0) {
             changeDate(false);
             dayIndex--;
-        }
-        else{
+        } else {
             //back too far
         }
         updateList();
     }
-    public void updateList(){
+
+    public void updateList() {
 
         list.clear();
-        for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
+        for (int i = 0; i < d.getDayList().get(dayIndex).getMeetingList().size(); i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
 
         }
-        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
+        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
     }
 
-    public void changeDate(boolean direction)
-    {
-        if(direction)
-        {
-            calendar.add(Calendar.DATE,1);
-        }
-        else if(!direction)
-        {
-            calendar.add(Calendar.DATE,-1);
+    public void changeDate(boolean direction) {
+        if (direction) {
+            calendar.add(Calendar.DATE, 1);
+        } else if (!direction) {
+            calendar.add(Calendar.DATE, -1);
 
         }
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         textViewDate.setText(currentDate);
     }
-    package com.journaldev.countdowntimer
 
-import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-    public class MainActivity extends AppCompatActivity {
+    private ProgressBar progressBar;
+    private int progressStatus = 0;
+    private TextView textView;
+    private Handler handler = new Handler(); }
 
-        ProgressBar progressBar;
-        Button start_timer,stop_timer;
-        MyCountDownTimer myCountDownTimer;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-
-            progressBar=(ProgressBar)findViewById(R.id.progressBar);
-            start_timer=(Button)findViewById(R.id.button);
-            stop_timer=(Button)findViewById(R.id.button2);
-
-            start_timer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    myCountDownTimer = new MyCountDownTimer(10000, 1000);
-                    myCountDownTimer.start();
-
-                }
-            });
-
-            stop_timer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-};
-
-                  }
