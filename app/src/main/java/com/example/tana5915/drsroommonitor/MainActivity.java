@@ -2,6 +2,7 @@ package com.example.tana5915.drsroommonitor;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.content.res.AssetManager;
 
 import android.util.Log;
 import android.view.Gravity;
@@ -20,8 +21,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+import android.content.res.AssetManager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import java.io.InputStream;
+import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
+    String TAG ="main";
 
     ListView listView;
     List list = new ArrayList();
@@ -37,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        readExcelFileFromAssets();
         subject = findViewById(R.id.subject);
         organizer = findViewById(R.id.organizer);
         startTime = findViewById(R.id.startTime);
@@ -48,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list_view);
 
         d = new Document();
-        d.tempFill();
+        d.fill();
         for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
         }
@@ -77,7 +93,61 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    public void readExcelFileFromAssets() {
+        try {
+            InputStream myInput;
+            // initialize asset manager
+            AssetManager assetManager = getAssets();
+            //  open excel sheet
+            myInput = assetManager.open(".xls");
+            // Create a POI File System object
+            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+            // Create a workbook using the File System
+            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
+            // Get the first sheet from workbook
+            HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+            // We now need something to iterate through the cells.
+            Iterator<Row> rowIter = mySheet.rowIterator();
+            int rowno =0;
+            while (rowIter.hasNext()) {
+                String subj="";
+                String organ="";
+                String eTime="";
+                String sTime="";
+                String sDate="";
+                Log.e(TAG, " row no "+ rowno );
+                HSSFRow myRow = (HSSFRow) rowIter.next();
+                if(rowno !=0) {
+                    Iterator<Cell> cellIter = myRow.cellIterator();
+                    int colno =0;
 
+                    while (cellIter.hasNext()) {
+                        HSSFCell myCell = (HSSFCell) cellIter.next();
+                        if (colno==0){
+                            subj = myCell.toString();
+                        }else if (colno==1){
+                            sDate = myCell.toString();
+                        }else if (colno==2){
+                            sTime = myCell.toString();
+                        }
+                        else if (colno==4){
+                            eTime = myCell.toString();
+                        }
+                        else if (colno==9){
+                            organ = myCell.toString();
+                        }
+
+                        colno++;
+                        Log.e(TAG, " Index :" + myCell.getColumnIndex() + " -- " + myCell.toString());
+                    }
+                    d.createMeeting(organ,sDate,sTime,eTime,subj);
+                }
+                rowno++;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "error "+ e.toString());
+        }
+    }
     public void nextDay(View view)
     {
 

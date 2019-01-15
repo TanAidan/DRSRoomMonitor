@@ -9,7 +9,6 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="557dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -150,5 +149,6 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
+    tools:context="blueappsoftware.readexcelfile.MainActivity">
 
 </RelativeLayout>
