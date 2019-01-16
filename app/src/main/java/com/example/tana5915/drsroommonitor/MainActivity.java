@@ -10,7 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +38,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.InputStream;
 import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity","Created" );
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         readExcelFileFromAssets();
@@ -95,17 +104,28 @@ public class MainActivity extends AppCompatActivity {
     }
     public void readExcelFileFromAssets() {
         try {
-            InputStream myInput;
+
+            // InputStream myInput;
             // initialize asset manager
-            AssetManager assetManager = getAssets();
+            //AssetManager assetManager = getAssets();
             //  open excel sheet
-            myInput = assetManager.open(".xls");
+            Log.d("MainActivity","Created1" );
+
+            InputStream file = getAssets().open("DrsMeetingRoom.xls");
+            //myInput = assetManager.open("C:\\Users\\quanj3010\\Documents\\GitHub\\DRSRoomMonitor\\app\\src\\main\\java\\assets\\DrsMeetingSchedule.xls");
             // Create a POI File System object
-            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+           // POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
             // Create a workbook using the File System
-            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
+            Log.d("MainActivity","Created1" );
+
+           // XSSFWorkbook workbook = new XSSFWorkbook (file);
+
+            HSSFWorkbook myWorkBook = HSSFWorkbook.create(file);
             // Get the first sheet from workbook
+           // XSSFSheet mySheet = workbook.getSheetAt(0);
+
             HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+            Log.d("MainActivity",mySheet.toString() );
             // We now need something to iterate through the cells.
             Iterator<Row> rowIter = mySheet.rowIterator();
             int rowno =0;
@@ -138,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         colno++;
-                        Log.e(TAG, " Index :" + myCell.getColumnIndex() + " -- " + myCell.toString());
+                        Log.e("MainActivity", " Index :" + myCell.getColumnIndex() + " -- " + myCell.toString());
                     }
                     d.createMeeting(organ,sDate,sTime,eTime,subj);
                 }
