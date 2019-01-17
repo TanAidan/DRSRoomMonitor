@@ -3,6 +3,8 @@ package com.example.tana5915.drsroommonitor;
 import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,10 +42,7 @@ public class Document {
 
 
     public void fill() {
-         for (int i = 0; i<meetingArrayLIst.size();i++)
-         {
 
-         }
         int index = -4;
         int meetingIndex=0;
         for (Day day : dayList) {
@@ -77,7 +76,9 @@ public class Document {
 
 
     }
-    private static String getCurrentDate() throws ParseException{
+
+
+    /*private static String getCurrentDate() throws ParseException{
         String d1 = new Date().toString();
         Date d = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(d1);
         Calendar cal = Calendar.getInstance();
@@ -87,7 +88,7 @@ public class Document {
         String year = ""+d.getYear();
         Log.d("Document",day+"-"+monthName+"-"+year );
         return day+"-"+monthName+"-"+year;
-    }
+    }*/
 
         public ArrayList<Day> getDayList ()
         {
@@ -100,6 +101,42 @@ public class Document {
             Meeting m = new Meeting(organizer, sDate, sTime, eTime, subject);
             meetingArrayLIst.add(m);
             Log.d("MeetingDay", m.getsDay())     ;
+
+        }
+        // returns the current meeting
+        public Meeting getCurrentMeeting()
+        {
+            for (Meeting m :dayList.get(4).getMeetingList())
+            {
+                try {
+                    String sTime = m.getsTime();
+                    String eTime = m.geteTime();
+                    String currentTime = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+                    Date time1 = new SimpleDateFormat("HH:mm:ss").parse(sTime);
+                    Date time2 = new SimpleDateFormat("HH:mm:ss").parse(eTime);
+                    Date cTime = new SimpleDateFormat("HH:mm:ss").parse(currentTime);
+                    Calendar c1 = Calendar.getInstance();
+                    c1.setTime(time1);
+                    Calendar c2 = Calendar.getInstance();
+                    c2.setTime(time2);
+                    Calendar c3 = Calendar.getInstance();
+                    c3.setTime(cTime);
+
+                    Date x = c3.getTime();
+                    if((x.after(c1.getTime())&& x.before(c2.getTime())))
+                    {
+                        return m;
+                    }
+
+
+
+                }
+                catch(ParseException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return null;
 
         }
 

@@ -1,5 +1,6 @@
 package com.example.tana5915.drsroommonitor;
 
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.res.AssetManager;
@@ -49,12 +50,13 @@ public class MainActivity extends AppCompatActivity {
     String TAG ="main";
 
     ListView listView;
+    Boolean b = false;
     List list = new ArrayList();
     ArrayAdapter adapter;
     Document d;
     Calendar calendar;
     TextView textViewDate, subject, startTime, endTime, organizer;
-
+    Meeting currentMeeting = null;
     int dayIndex=4;  //set to 4, 4 is the index of the 0th day
 
 //thread example
@@ -67,26 +69,9 @@ public class MainActivity extends AppCompatActivity {
         d = new Document();
 
         readExcelFileFromAssets();
-        Thread thread = new Thread() {
 
-            @Override
-            public void run() {
-                try {
-                    while (!this.isInterrupted()) {
-                        Thread.sleep(1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // update TextView here!
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        };
+        currentMeeting = d.getCurrentMeeting();
 
-        thread.start();
         subject = findViewById(R.id.subject);
         organizer = findViewById(R.id.organizer);
         startTime = findViewById(R.id.startTime);
@@ -105,21 +90,61 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
         listView.setAdapter(adapter);
         Log.d("DRSMainActivity","onCreate");
+        setCurrentMeeting();
+        //Constantly checks and updates current meeting unless a click has been placed
+       Thread thread = new Thread() {
 
+            @Override
+            public void run() {
+                try {
+                    while (!this.isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!b)
+                                {
+                                    setCurrentMeeting();
+                                }
+                                // update TextView here!
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        thread.start();
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
+                b = true;
+                Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
                 String subj = "Subject: "+m.getSubject();
                 String organ = "Organizer: "+m.getOrganizer();
-                String eTime = "EndTime: "+ m.geteTime();
-                String sTime = "StartTime: " +m.getsTime();
+                String eTime = "EndTime: "+ m.geteDisplayTime();
+                String sTime = "StartTime: " +m.getsDisplayTime();
                 subject.setText(subj);
                 organizer.setText(organ);
                 endTime.setText(eTime);
                 startTime.setText(sTime);
+                new CountDownTimer(15000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    public void onFinish() {
+                        setCurrentMeeting();
+                        b= false;
+                    }
+
+                }.start();
+
+
 
             }
 
@@ -181,29 +206,19 @@ public class MainActivity extends AppCompatActivity {
                         }else if (colno==1){
                             sDate = myCell.toString();
                         }else if (colno==2){
-                            int i =Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2));
-                            if(Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2))>12)
-                            {
-                                 i = i-12;
 
-                                sTime= ""+i+formatTime.format(myCell.getDateCellValue()).substring(2);
-                            }
-                            else{
+
+
                                 sTime = formatTime.format(myCell.getDateCellValue());
-                            }
+
 
                         }
                         else if (colno==4){
-                            int i =Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2));
-                            if(Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2))>12)
-                            {
-                                i = i-12;
 
-                                eTime= i+formatTime.format(myCell.getDateCellValue()).substring(2);
-                            }
-                            else{
+
+
                                 eTime = formatTime.format(myCell.getDateCellValue());
-                            }
+
                         }
                         else if (colno==9){
                             organ = myCell.toString();
@@ -229,6 +244,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    public void setCurrentMeeting()
+    {
+        currentMeeting = d.getCurrentMeeting();
+        String subj = "Subject: "+currentMeeting.getSubject();
+        String organ = "Organizer: "+currentMeeting.getOrganizer();
+        String eTime = "EndTime: "+ currentMeeting.geteDisplayTime();
+        String sTime = "StartTime: " +currentMeeting.getsDisplayTime();
+        subject.setText(subj);
+        organizer.setText(organ);
+        endTime.setText(eTime);
+        startTime.setText(sTime);
+
+    }
+
     public void nextDay(View view)
     {
 
@@ -257,9 +286,15 @@ public class MainActivity extends AppCompatActivity {
     public void updateList(){
 
         list.clear();
-        for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
-            list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
+        if(d.getDayList().get(dayIndex).getMeetingList().size()==0)
+        {
+            list.add("No Meetings Today");
+        }
+        else {
+            for (int i = 0; i < d.getDayList().get(dayIndex).getMeetingList().size(); i++) {
+                list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
 
+            }
         }
         adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
         listView.setAdapter(adapter);
