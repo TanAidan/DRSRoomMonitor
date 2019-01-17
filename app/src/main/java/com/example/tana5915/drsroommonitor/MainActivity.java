@@ -11,9 +11,12 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.DateFormat;
@@ -54,14 +57,36 @@ public class MainActivity extends AppCompatActivity {
 
     int dayIndex=4;  //set to 4, 4 is the index of the 0th day
 
-
+//thread example
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MainActivity","Created" );
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        d = new Document();
+
         readExcelFileFromAssets();
+        Thread thread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!this.isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // update TextView here!
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        thread.start();
         subject = findViewById(R.id.subject);
         organizer = findViewById(R.id.organizer);
         startTime = findViewById(R.id.startTime);
@@ -72,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         textViewDate.setText(currentDate);
         listView = (ListView) findViewById(R.id.list_view);
 
-        d = new Document();
         d.fill();
         for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
@@ -103,24 +127,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void readExcelFileFromAssets() {
+       // AssetManager assetManager = getResources().getAssets();
+        InputStream inputStream = null;
         try {
 
-            // InputStream myInput;
             // initialize asset manager
-            //AssetManager assetManager = getAssets();
-            //  open excel sheet
-            Log.d("MainActivity","Created1" );
 
-            InputStream file = getAssets().open("DrsMeetingRoom.xls");
-            //myInput = assetManager.open("C:\\Users\\quanj3010\\Documents\\GitHub\\DRSRoomMonitor\\app\\src\\main\\java\\assets\\DrsMeetingSchedule.xls");
+            //  open excel sheet
+
+           InputStream myInput = getAssets().open("DrsMeetingRoom.xls");
+            if(myInput!=null)
+            {
+                Log.d(TAG, "File Found");
+            }
+            //File file = new File("assets\\DrsMeetingRoom.xls");
+         //  FileInputStream myInput;
+          // BufferedReader myInput= new BufferedReader(new InputStreamReader(activity.getAssets().open(myfile.pdf)));
+
+           // myInput = assetManager.open("C:\\Users\\quanj3010\\Documents\\GitHub\\DRSRoomMonitor\\app\\src\\main\\java\\assets\\DrsMeetingSchedule.xls");
             // Create a POI File System object
-           // POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
             // Create a workbook using the File System
             Log.d("MainActivity","Created1" );
 
            // XSSFWorkbook workbook = new XSSFWorkbook (file);
 
-            HSSFWorkbook myWorkBook = HSSFWorkbook.create(file);
+            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
             // Get the first sheet from workbook
            // XSSFSheet mySheet = workbook.getSheetAt(0);
 
@@ -129,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             // We now need something to iterate through the cells.
             Iterator<Row> rowIter = mySheet.rowIterator();
             int rowno =0;
-            while (rowIter.hasNext()) {
+            while (rowIter.hasNext()&&rowno<27) {
                 String subj="";
                 String organ="";
                 String eTime="";
@@ -142,31 +174,60 @@ public class MainActivity extends AppCompatActivity {
                     int colno =0;
 
                     while (cellIter.hasNext()) {
+                        SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
                         HSSFCell myCell = (HSSFCell) cellIter.next();
                         if (colno==0){
                             subj = myCell.toString();
                         }else if (colno==1){
                             sDate = myCell.toString();
                         }else if (colno==2){
-                            sTime = myCell.toString();
+                            int i =Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2));
+                            if(Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2))>12)
+                            {
+                                 i = i-12;
+
+                                sTime= ""+i+formatTime.format(myCell.getDateCellValue()).substring(2);
+                            }
+                            else{
+                                sTime = formatTime.format(myCell.getDateCellValue());
+                            }
+
                         }
                         else if (colno==4){
-                            eTime = myCell.toString();
+                            int i =Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2));
+                            if(Integer.parseInt(formatTime.format(myCell.getDateCellValue()).substring(0,2))>12)
+                            {
+                                i = i-12;
+
+                                eTime= i+formatTime.format(myCell.getDateCellValue()).substring(2);
+                            }
+                            else{
+                                eTime = formatTime.format(myCell.getDateCellValue());
+                            }
                         }
                         else if (colno==9){
                             organ = myCell.toString();
                         }
 
                         colno++;
-                        Log.e("MainActivity", " Index :" + myCell.getColumnIndex() + " -- " + myCell.toString());
                     }
+                    Log.e("MainActivity", " Index :" + rowno+ " -- " + subj+" "+sDate+" "+sTime+" "+eTime+" "+organ);
+
                     d.createMeeting(organ,sDate,sTime,eTime,subj);
+                    Log.d("MainActivity","MeetingAdded" );
+
                 }
                 rowno++;
             }
+            inputStream.close();
+            myFileSystem.close();
+            myWorkBook.close();
+            Log.d("main", "ExcelFileRead");
+
         } catch (Exception e) {
             Log.e(TAG, "error "+ e.toString());
         }
+
     }
     public void nextDay(View view)
     {

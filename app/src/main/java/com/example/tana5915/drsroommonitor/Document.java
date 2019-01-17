@@ -1,6 +1,13 @@
 package com.example.tana5915.drsroommonitor;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class Document {
     // JSONObject obj = new JSONObject("assets/data.json");
@@ -10,30 +17,38 @@ public class Document {
     String TAG;
 
     public Document() {
+        Date d = new Date();
 
         dayList = new ArrayList<>();
         meetingArrayLIst = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
+
             dayList.add(new Day());
         }
     }
-
+//21-Jan-2019
 
 
     public void fill() {
 
 
         for (Day d : dayList) {
-            if (dayList.indexOf(d) != 4) {
+
 
 
                 for (int i = 0; i < 24; i++) {
-
-                    d.addMeeting(meetingArrayLIst.get(i));
+                    try {
+                        if (meetingArrayLIst.get(i).getsDate().equals(getCurrentDate()))
+                            d.addMeeting(meetingArrayLIst.get(i));
+                    }
+                    catch(Exception e)
+                    {
+                        Log.d("document",e.toString());
+                    }
 
 
                 }
-            }
+
         }
 
            /* dayList.get(4).addMeeting(createMeeting("Todd", "1/11/19", "8:00 AM", "9:00 AM", "RedShift Software"));
@@ -64,6 +79,16 @@ public class Document {
 */
 
 
+    }
+    private static String getCurrentDate() throws ParseException{
+        String d1 = new Date().toString();
+        Date d = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(d1);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        String monthName = new SimpleDateFormat("MMMM").format(cal.getTime());
+        String day = ""+d.getDay();
+        String year = ""+d.getYear();
+        return day+"-"+monthName+"-"+year;
     }
         public ArrayList<Day> getDayList ()
         {
