@@ -52,12 +52,13 @@ public class Document {
             dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
             Log.d("DocumentDay", ""+dayOfMonth)  ;
-                for (int i = 0; i <meetingArrayLIst.size(); i++) {
+                for (int i = meetingIndex; i <meetingArrayLIst.size(); i++) {
                     Log.d("ForMeetingDay", meetingArrayLIst.get(i).getsDay())   ;                   
 
                     if(Integer.parseInt(meetingArrayLIst.get(i).getsDay())==dayOfMonth)
                         {
                                  day.addMeeting(meetingArrayLIst.get(i));
+                                 meetingIndex++;
 
                         }
                        else
