@@ -1,5 +1,7 @@
 package com.example.tana5915.drsroommonitor;
 
+import android.util.Log;
+
 public class Meeting {
 private String organizer, sDate, sTime, eTime, subject;
 
@@ -21,6 +23,23 @@ private String organizer, sDate, sTime, eTime, subject;
 
     public String getsDate() {
         return sDate;
+    }
+
+    public String getsDay()
+    {
+        String temp = "";
+        for (int i=0; i<sDate.length();i++)
+        {
+            if(sDate.substring(i,i+1).equals("-")){
+              break;
+            }
+            else{
+                temp+=sDate.substring(i,i+1);
+
+            }
+        }
+        Log.d("Meetings",temp);
+        return temp;
     }
 
     public void setsDate(String sDate) {

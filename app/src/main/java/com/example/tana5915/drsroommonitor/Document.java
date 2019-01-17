@@ -1,7 +1,9 @@
 package com.example.tana5915.drsroommonitor;
 
 import android.util.Log;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,8 +17,16 @@ public class Document {
     ArrayList<Day> dayList;
     ArrayList<Meeting> meetingArrayLIst;
     String TAG;
+    Calendar calendar;
+    int dayOfMonth;
 
     public Document() {
+       calendar = Calendar.getInstance();
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        //Log.d("DocumentDay", ""+dayOfMonth)  ;
+
+
+    //    Log.d("Document", dayOfMonthStr);
         Date d = new Date();
 
         dayList = new ArrayList<>();
@@ -30,53 +40,39 @@ public class Document {
 
 
     public void fill() {
+         for (int i = 0; i<meetingArrayLIst.size();i++)
+         {
 
+         }
+        int index = -4;
+        int meetingIndex=0;
+        for (Day day : dayList) {
+            calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH,index );
+            dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        for (Day d : dayList) {
+            Log.d("DocumentDay", ""+dayOfMonth)  ;
+                for (int i = 0; i <meetingArrayLIst.size(); i++) {
+                    Log.d("ForMeetingDay", meetingArrayLIst.get(i).getsDay())   ;                   
 
+                    if(Integer.parseInt(meetingArrayLIst.get(i).getsDay())==dayOfMonth)
+                        {
+                                 day.addMeeting(meetingArrayLIst.get(i));
 
-
-                for (int i = 0; i < 24; i++) {
-                    try {
-                        if (meetingArrayLIst.get(i).getsDate().equals(getCurrentDate()))
-                            d.addMeeting(meetingArrayLIst.get(i));
-                    }
-                    catch(Exception e)
-                    {
-                        Log.d("document",e.toString());
-                    }
+                        }
+                       else
+                        {
+                            index++;
+                            break;
+                        }
 
 
                 }
 
         }
 
-           /* dayList.get(4).addMeeting(createMeeting("Todd", "1/11/19", "8:00 AM", "9:00 AM", "RedShift Software"));
-            dayList.get(4).addMeeting(createMeeting("Rebekah", "1/11/19", "9:00 AM", "10:00 AM", "Apple Meeting"));
-            dayList.get(4).addMeeting(createMeeting("Josh", "1/11/19", "10:00 AM", "11:00 AM", "DRS Meeting"));
-            dayList.get(4).addMeeting(createMeeting("Peter", "1/11/19", "11:00 AM", "12:00 PM", "Canyon Crest Academy Meeting"));
-            dayList.get(4).addMeeting(createMeeting("Aidan", "1/11/19", "12:00 PM", "1:00 PM", "Samsung Software"));
-            dayList.get(4).addMeeting(createMeeting("Paymon", "1/11/19", "1:00 PM", "2:00 PM", "Microsoft Meeting"));
-            dayList.get(4).addMeeting(createMeeting("Alexa", "1/11/19", "2:00 PM", "3:00 PM", "Dell Meeting"));
-            dayList.get(4).addMeeting(createMeeting("Emily", "1/11/19", "3:00 PM", "4:00 PM", "Sony Meeting"));
-            dayList.get(4).addMeeting(createMeeting("John", "1/11/19", "4:00 PM", "5:00 PM", " DRS Quartly Discussion"));
-            dayList.get(4).addMeeting(createMeeting("Daniel", "1/11/19", "5:00 PM", "6:00 PM", "Customer Meeting with QT"));
-            dayList.get(4).addMeeting(createMeeting("Jack", "1/11/19", "6:00 PM", "7:00 PM", "Secure"));
-            dayList.get(4).addMeeting(createMeeting("Tom", "1/11/19", "7:00 PM", "8:00 PM", "RedShift Software"));
-        dayList.get(4).addMeeting(createMeeting("Todd", "1/11/19", "8:00 PM", "9:00 PM", "RedShift Software"));
-        dayList.get(4).addMeeting(createMeeting("Rebekah", "1/11/19", "9:00 AM", "10:00 PM", "Apple Meeting"));
-        dayList.get(4).addMeeting(createMeeting("Josh", "1/11/19", "10:00 PM", "11:00 PM", "DRS Meeting"));
-        dayList.get(4).addMeeting(createMeeting("Peter", "1/11/19", "11:00 AM", "12:00 PM", "Canyon Crest Academy Meeting"));
-        dayList.get(4).addMeeting(createMeeting("Aidan", "1/11/19", "12:00 PM", "1:00 PM", "Samsung Software"));
-        dayList.get(4).addMeeting(createMeeting("Paymon", "1/11/19", "1:00 PM", "2:00 PM", "Microsoft Meeting"));
-        dayList.get(4).addMeeting(createMeeting("Alexa", "1/11/19", "2:00 PM", "3:00 PM", "Dell Meeting"));
-        dayList.get(4).addMeeting(createMeeting("Emily", "1/11/19", "3:00 PM", "4:00 PM", "Sony Meeting"));
-        dayList.get(4).addMeeting(createMeeting("John", "1/11/19", "4:00 PM", "5:00 PM", " DRS Quartly Discussion"));
-        dayList.get(4).addMeeting(createMeeting("Daniel", "1/11/19", "5:00 PM", "6:00 PM", "Customer Meeting with QT"));
-        dayList.get(4).addMeeting(createMeeting("Jack", "1/11/19", "6:00 PM", "7:00 PM", "Secure"));
-        dayList.get(4).addMeeting(createMeeting("Tom", "1/11/19", "7:00 PM", "8:00 PM", "RedShift Software"));
 
-*/
+
 
 
     }
@@ -88,8 +84,10 @@ public class Document {
         String monthName = new SimpleDateFormat("MMMM").format(cal.getTime());
         String day = ""+d.getDay();
         String year = ""+d.getYear();
+        Log.d("Document",day+"-"+monthName+"-"+year );
         return day+"-"+monthName+"-"+year;
     }
+
         public ArrayList<Day> getDayList ()
         {
             return dayList;
@@ -100,6 +98,7 @@ public class Document {
 
             Meeting m = new Meeting(organizer, sDate, sTime, eTime, subject);
             meetingArrayLIst.add(m);
+            Log.d("MeetingDay", m.getsDay())     ;
 
         }
 
