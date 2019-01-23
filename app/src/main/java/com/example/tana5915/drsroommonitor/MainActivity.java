@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             // We now need something to iterate through the cells.
             Iterator<Row> rowIter = mySheet.rowIterator();
             int rowno =0;
-            while (rowIter.hasNext()&&rowno<27) {
+            while (rowIter.hasNext()) {
                 String subj="";
                 String organ="";
                 String eTime="";
@@ -247,15 +247,16 @@ public class MainActivity extends AppCompatActivity {
     public void setCurrentMeeting()
     {
         currentMeeting = d.getCurrentMeeting();
-        String subj = "Subject: "+currentMeeting.getSubject();
-        String organ = "Organizer: "+currentMeeting.getOrganizer();
-        String eTime = "EndTime: "+ currentMeeting.geteDisplayTime();
-        String sTime = "StartTime: " +currentMeeting.getsDisplayTime();
-        subject.setText(subj);
-        organizer.setText(organ);
-        endTime.setText(eTime);
-        startTime.setText(sTime);
-
+        if(currentMeeting!=null) {
+            String subj = "Subject: " + currentMeeting.getSubject();
+            String organ = "Organizer: " + currentMeeting.getOrganizer();
+            String eTime = "EndTime: " + currentMeeting.geteDisplayTime();
+            String sTime = "StartTime: " + currentMeeting.getsDisplayTime();
+            subject.setText(subj);
+            organizer.setText(organ);
+            endTime.setText(eTime);
+            startTime.setText(sTime);
+        }
     }
 
     public void nextDay(View view)

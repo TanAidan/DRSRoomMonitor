@@ -95,6 +95,7 @@ private String organizer, sDate, sTime, eTime, subject, sdisplayTime, edisplayTi
      return s;
 
     }
+    //converting military time to standard time to display
     public void milTime(String s1, String s2){
         int i =Integer.parseInt(s1.substring(0,2));
         if(Integer.parseInt(s1.substring(0,2))>12)

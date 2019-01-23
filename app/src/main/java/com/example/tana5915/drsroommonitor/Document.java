@@ -33,7 +33,7 @@ public class Document {
 
         dayList = new ArrayList<>();
         meetingArrayLIst = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i++) { //four days back 10 ahead plus current day = 15
 
             dayList.add(new Day());
         }
@@ -43,8 +43,8 @@ public class Document {
 
     public void fill() {
 
-        int index = -4;
-        int meetingIndex=0;
+        int index = -4; //Index to determine which day meetings are added too
+        int meetingIndex=0; //Index to determine which Meetings have already been added and which one to add next
         for (Day day : dayList) {
             calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH,index );
@@ -54,7 +54,7 @@ public class Document {
                 for (int i = meetingIndex; i <meetingArrayLIst.size(); i++) {
                     Log.d("ForMeetingDay", meetingArrayLIst.get(i).getsDay())   ;                   
 
-                    if(Integer.parseInt(meetingArrayLIst.get(i).getsDay())==dayOfMonth)
+                    if(Integer.parseInt(meetingArrayLIst.get(i).getsDay())==dayOfMonth)  //if the day ex: indexed day is equal to the meetings day, then add meeting to that day
                         {
                                  day.addMeeting(meetingArrayLIst.get(i));
                                  meetingIndex++;
@@ -96,7 +96,7 @@ public class Document {
         }
 
 
-        public void createMeeting (String organizer, String sDate, String sTime, String eTime, String subject){
+        public void createMeeting (String organizer, String sDate, String sTime, String eTime, String subject){  //meeting data is read from excel and passed into this document
 
             Meeting m = new Meeting(organizer, sDate, sTime, eTime, subject);
             meetingArrayLIst.add(m);
@@ -104,7 +104,7 @@ public class Document {
 
         }
         // returns the current meeting
-        public Meeting getCurrentMeeting()
+        public Meeting getCurrentMeeting()   // Changing times into 3 dates: start time, end time, and current time - used to figure out which meeting of the day are we currently on
         {
             for (Meeting m :dayList.get(4).getMeetingList())
             {
@@ -123,6 +123,7 @@ public class Document {
                     c3.setTime(cTime);
 
                     Date x = c3.getTime();
+                    //comparing times
                     if((x.after(c1.getTime())&& x.before(c2.getTime())))
                     {
                         return m;
