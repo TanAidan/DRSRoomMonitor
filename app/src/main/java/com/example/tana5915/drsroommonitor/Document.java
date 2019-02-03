@@ -96,9 +96,9 @@ public class Document {
         }
 
 
-        public void createMeeting (String organizer, String sDate, String sTime, String eTime, String subject){  //meeting data is read from excel and passed into this document
+        public void createMeeting (Meeting m){  //meeting data is read from excel and passed into this document
 
-            Meeting m = new Meeting(organizer, sDate, sTime, eTime, subject);
+
             meetingArrayLIst.add(m);
             Log.d("MeetingDay", m.getsDay())     ;
 

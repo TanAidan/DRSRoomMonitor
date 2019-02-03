@@ -52,11 +52,12 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Boolean b = false;
     List list = new ArrayList();
-    ArrayAdapter adapter;
+    MeetingAdapter adapter;
     Document d;
     Calendar calendar;
     TextView textViewDate, subject, startTime, endTime, organizer;
     Meeting currentMeeting = null;
+    int currentMeetingIndex=-1;
     int dayIndex=4;  //set to 4, 4 is the index of the 0th day
 
 //thread example
@@ -81,13 +82,14 @@ public class MainActivity extends AppCompatActivity {
         textViewDate = findViewById(R.id.text_view_date);
         textViewDate.setText(currentDate);
         listView = (ListView) findViewById(R.id.list_view);
-
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         d.fill();
         for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
         }
 
-        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
+        adapter = new MeetingAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
+
         listView.setAdapter(adapter);
         Log.d("DRSMainActivity","onCreate");
         setCurrentMeeting();
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("MeetingSelected","selected"+position);
                 b = true;
                 Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
                 String subj = "Subject: "+m.getSubject();
@@ -155,6 +158,12 @@ public class MainActivity extends AppCompatActivity {
        // AssetManager assetManager = getResources().getAssets();
         InputStream inputStream = null;
         try {
+            //add the calendar day 4 days ago and compare it, if it is true, then start adding stuff
+            boolean add = false;
+            Calendar excelCalendar;
+            calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH,-4 );
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
             // initialize asset manager
 
@@ -227,8 +236,16 @@ public class MainActivity extends AppCompatActivity {
                         colno++;
                     }
                     Log.e("MainActivity", " Index :" + rowno+ " -- " + subj+" "+sDate+" "+sTime+" "+eTime+" "+organ);
+                    Meeting m = new Meeting(organ, sDate, sTime, eTime, subj);
+                    if(Integer.parseInt(m.getsDay())==dayOfMonth)
+                    {
+                        add = true;
+                    }
+                    if(add)
+                    {
+                        d.createMeeting(m);
 
-                    d.createMeeting(organ,sDate,sTime,eTime,subj);
+                    }
                     Log.d("MainActivity","MeetingAdded" );
 
                 }
@@ -257,6 +274,12 @@ public class MainActivity extends AppCompatActivity {
             endTime.setText(eTime);
             startTime.setText(sTime);
         }
+        currentMeetingIndex=d.getMeetingIndex(currentMeeting);
+       // listView.setSelection(d.getMeetingIndex(currentMeeting));
+        Log.d("CurrentMeetingIndex", "index: "+ d.getMeetingIndex(currentMeeting));
+        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting));
+       // listView.setItemChecked(d.getMeetingIndex(currentMeeting),true);
+       // Log.d("CurrentMeeting", "CurrentMeeting Inndex"+ d.getMeetingIndex(currentMeeting));
     }
 
     public void nextDay(View view)
@@ -297,7 +320,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
+
+        adapter = new MeetingAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
+        adapter.setCurrentMeetingPos(currentMeetingIndex);
+        //adapter.getView
         listView.setAdapter(adapter);
     }
 
