@@ -104,6 +104,20 @@ public class Document {
 
         }
         // returns the current meeting
+        // returns -1 if no current meeting found for that day
+        public int getMeetingIndex(Meeting m)
+        {
+            int index=-1;
+            for(int i =0; i<dayList.get(4).getMeetingList().size(); i++)
+            {
+                if(m.equals(dayList.get(4).getMeetingList().get(i)))
+                {
+                 index =i;
+                }
+            }
+            return index;
+        }
+
         public Meeting getCurrentMeeting()   // Changing times into 3 dates: start time, end time, and current time - used to figure out which meeting of the day are we currently on
         {
             for (Meeting m :dayList.get(4).getMeetingList())

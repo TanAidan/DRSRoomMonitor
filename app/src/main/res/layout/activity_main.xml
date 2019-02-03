@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".MainActivity">
 
 
@@ -80,10 +81,12 @@
         android:layout_alignLeft="@+id/main_meeting"
         android:layout_marginStart="-5dp"
         android:layout_marginLeft="-5dp"
+        android:choiceMode = "singleChoice"
         android:layout_marginTop="7dp" />
 
 
     <TextView
+
         android:id="@+id/text_view_date"
         android:layout_width="266dp"
         android:layout_height="wrap_content"
