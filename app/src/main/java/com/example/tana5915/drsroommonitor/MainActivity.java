@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         textViewDate.setText(currentDate);
         listView = (ListView) findViewById(R.id.list_view);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting, dayIndex));
         d.fill();
         for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
@@ -274,16 +275,17 @@ public class MainActivity extends AppCompatActivity {
             endTime.setText(eTime);
             startTime.setText(sTime);
         }
-        currentMeetingIndex=d.getMeetingIndex(currentMeeting);
+        currentMeetingIndex=d.getMeetingIndex(currentMeeting, dayIndex);
        // listView.setSelection(d.getMeetingIndex(currentMeeting));
-        Log.d("CurrentMeetingIndex", "index: "+ d.getMeetingIndex(currentMeeting));
-        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting));
+        Log.d("CurrentMeetingIndex", "index: "+ d.getMeetingIndex(currentMeeting, dayIndex));
+        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting, dayIndex));
        // listView.setItemChecked(d.getMeetingIndex(currentMeeting),true);
        // Log.d("CurrentMeeting", "CurrentMeeting Inndex"+ d.getMeetingIndex(currentMeeting));
     }
 
     public void nextDay(View view)
     {
+        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting, dayIndex));
 
 
         if(dayIndex<14) {
@@ -297,6 +299,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public void backDay(View view)
     {
+        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting, dayIndex));
+
 
         if(dayIndex>0) {
             changeDate(false);
@@ -329,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeDate(boolean direction)
     {
+
         if(direction)
         {
             calendar.add(Calendar.DATE,1);
