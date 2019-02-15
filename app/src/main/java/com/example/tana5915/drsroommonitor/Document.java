@@ -105,22 +105,20 @@ public class Document {
         }
         // returns the current meeting
         // returns -1 if no current meeting found for that day
-        public int getMeetingIndex(Meeting m, int dayIndex)
-        {
-            int index=-1;
-            if(dayIndex!=4)
-            {
+        public int getMeetingIndex(Meeting m, int dayIndex) {
+            int index = -1;
+            if (dayIndex != 4) {
                 return -1;
-            }
-            else {
+            } else if (dayList.get(4).getMeetingList().size() >= 0) {
 //check if the day that you are on is the same day as the current day
                 for (int i = 0; i < dayList.get(4).getMeetingList().size(); i++) {
-                    if (m.equals(dayList.get(4).getMeetingList().get(i))) {
+                    if (m!=null&&m.equals(dayList.get(4).getMeetingList().get(i))) {
                         index = i;
                     }
                 }
                 Log.d("MeetingAdapter", "index set to " + index);
             }
+
             return index;
         }
 
