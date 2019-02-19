@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         textViewDate.setText(currentDate);
         listView = (ListView) findViewById(R.id.list_view);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        adapter.setCurrentMeetingPos(d.getMeetingIndex(currentMeeting, dayIndex));
         d.fill();
         for (int i = 0; i<d.getDayList().get(dayIndex).getMeetingList().size();i++) {
             list.add(d.getDayList().get(dayIndex).getMeetingList().get(i));
@@ -92,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MeetingAdapter(MainActivity.this, android.R.layout.simple_list_item_1,list);
 
         listView.setAdapter(adapter);
+
         Log.d("DRSMainActivity","onCreate");
         setCurrentMeeting();
         //Constantly checks and updates current meeting unless a click has been placed
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     while (!this.isInterrupted()) {
-                        Thread.sleep(1000);
+                        Thread.sleep(250);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -124,34 +124,36 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("MeetingSelected","selected"+position);
+                Log.d("MeetingSelected", "selected" + position);
                 b = true;
-                Meeting m =  d.getDayList().get(dayIndex).getMeetingList().get(position);
-                String subj = "Subject: "+m.getSubject();
-                String organ = "Organizer: "+m.getOrganizer();
-                String eTime = "EndTime: "+ m.geteDisplayTime();
-                String sTime = "StartTime: " +m.getsDisplayTime();
-                subject.setText(subj);
-                organizer.setText(organ);
-                endTime.setText(eTime);
-                startTime.setText(sTime);
-                new CountDownTimer(15000, 1000) {
+                if (d.getDayList().get(dayIndex).getMeetingList().size() <= 0) {
 
-                    public void onTick(long millisUntilFinished) {
+                } else {
+                    Meeting m = d.getDayList().get(dayIndex).getMeetingList().get(position);
+                    String subj = "Subject: " + m.getSubject();
+                    String organ = "Organizer: " + m.getOrganizer();
+                    String eTime = "EndTime: " + m.geteDisplayTime();
+                    String sTime = "StartTime: " + m.getsDisplayTime();
+                    subject.setText(subj);
+                    organizer.setText(organ);
+                    endTime.setText(eTime);
+                    startTime.setText(sTime);
+                    new CountDownTimer(10000, 1000) {
 
-                    }
+                        public void onTick(long millisUntilFinished) {
 
-                    public void onFinish() {
-                        setCurrentMeeting();
-                        b= false;
-                    }
+                        }
 
-                }.start();
+                        public void onFinish() {
+                            setCurrentMeeting();
+                            b = false;
+                        }
+
+                    }.start();
 
 
-
+                }
             }
-
         });
 
     }
@@ -162,9 +164,9 @@ public class MainActivity extends AppCompatActivity {
             //add the calendar day 4 days ago and compare it, if it is true, then start adding stuff
             boolean add = false;
             Calendar excelCalendar;
-            calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH,-4 );
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+            excelCalendar = Calendar.getInstance();
+            excelCalendar.add(Calendar.DAY_OF_MONTH,-4 );
+            int dayOfMonth = excelCalendar.get(Calendar.DAY_OF_MONTH);
 
             // initialize asset manager
 
@@ -238,16 +240,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Log.e("MainActivity", " Index :" + rowno+ " -- " + subj+" "+sDate+" "+sTime+" "+eTime+" "+organ);
                     Meeting m = new Meeting(organ, sDate, sTime, eTime, subj);
-                    if(Integer.parseInt(m.getsDay())==dayOfMonth)
+                    if(Integer.parseInt(m.getsDay())<dayOfMonth-4|| dayOfMonth<=Integer.parseInt(m.getsDay()))
                     {
                         add = true;
                     }
                     if(add)
                     {
                         d.createMeeting(m);
+                        Log.d("MainActivity","MeetingAdded" );
+
 
                     }
-                    Log.d("MainActivity","MeetingAdded" );
 
                 }
                 rowno++;
