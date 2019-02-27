@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                calendar = Calendar.getInstance();
-                                currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+                              //  calendar = Calendar.getInstance();
+                             //   currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
                                 if(!b)
                                 {
                                     setCurrentMeeting();
