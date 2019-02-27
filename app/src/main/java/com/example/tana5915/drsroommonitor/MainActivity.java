@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewDate, subject, startTime, endTime, organizer;
     Meeting currentMeeting = null;
     int currentMeetingIndex=-1;
-    String currentDate;
+  //  String currentDate;
     int dayIndex=4;  //set to 4, 4 is the index of the 0th day
 
 //thread example
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         startTime = findViewById(R.id.startTime);
         endTime = findViewById(R.id.eTime);
         calendar = Calendar.getInstance();
-         currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         textViewDate = findViewById(R.id.text_view_date);
         textViewDate.setText(currentDate);
         listView = (ListView) findViewById(R.id.list_view);
