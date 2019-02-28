@@ -1,6 +1,7 @@
 package com.example.tana5915.drsroommonitor;
 
 import android.os.CountDownTimer;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.res.AssetManager;
@@ -73,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
         readExcelFileFromAssets();
 
         currentMeeting = d.getCurrentMeeting();
-
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.abs_layout);
+       // getSupportActionBar().setTitle("Meeting Room Example");
+        ((TextView)getSupportActionBar().getCustomView().findViewById(R.id.tvTitle)).setText("Meeting Room Example");
         subject = findViewById(R.id.subject);
         organizer = findViewById(R.id.organizer);
         startTime = findViewById(R.id.startTime);
@@ -141,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     organizer.setText(organ);
                     endTime.setText(eTime);
                     startTime.setText(sTime);
-                    new CountDownTimer(10000, 1000) {
+                    new CountDownTimer(20000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
 
